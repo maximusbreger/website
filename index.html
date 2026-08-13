@@ -48,10 +48,22 @@
   .section-heading { font-family: 'Playfair Display', serif; font-weight: 400; font-size: clamp(2rem, 3.5vw, 3rem); line-height: 1.1; color: var(--ink); margin-bottom: 36px; }
   .bio-text p { font-family: 'EB Garamond', serif; font-size: 1.1rem; line-height: 1.85; color: var(--ink-mid); margin-bottom: 22px; }
 
-  /* UPCOMING */
-  .upcoming { padding: 90px 72px; background: var(--paper); }
-  .upcoming-title-block { margin-bottom: 52px; }
-  .upcoming-title-block .section-heading { font-size: clamp(2.6rem, 5vw, 4.2rem); margin-bottom: 0; }
+  /* PERFORMANCES */
+  .performances { padding: 90px 72px; background: var(--paper); }
+  .performances-title-block { margin-bottom: 36px; }
+  .performances-title-block .section-heading { font-size: clamp(2.6rem, 5vw, 4.2rem); margin-bottom: 0; }
+  .perf-tabs { display: flex; gap: 32px; border-bottom: 1px solid rgba(26,21,16,0.15); margin-bottom: 48px; }
+  .perf-tab {
+    background: none; border: none; cursor: pointer; padding: 14px 2px;
+    font-family: 'Outfit', sans-serif; font-size: 0.68rem; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--ink-light); position: relative;
+  }
+  .perf-tab.active { color: var(--ink); }
+  .perf-tab.active::after { content: ''; position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; background: var(--rust); }
+  .perf-panel { display: none; }
+  .perf-panel.active { display: block; }
+
+  /* Upcoming cards */
   .upcoming-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 44px; }
   .upcoming-card { border-top: 1px solid rgba(26,21,16,0.15); padding-top: 28px; }
   .upcoming-date { font-family: 'Playfair Display', serif; font-size: 1.6rem; color: var(--rust); margin-bottom: 6px; }
@@ -62,6 +74,21 @@
   .upcoming-tag { display: inline-block; font-size: 0.58rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--rust); border: 1px solid rgba(139,58,42,0.35); padding: 5px 12px; margin-bottom: 22px; }
   .upcoming-program-label { font-size: 0.58rem; letter-spacing: 0.28em; text-transform: uppercase; color: var(--ink-light); margin-bottom: 10px; }
   .upcoming-program { font-family: 'EB Garamond', serif; font-size: 1rem; line-height: 1.9; color: var(--ink-mid); list-style: none; }
+
+  /* Past performances — internal scroll so the page doesn't keep growing as more are added */
+  .past-scroll {
+    max-height: 480px; overflow-y: auto; padding-right: 16px;
+    border-top: 1px solid rgba(26,21,16,0.15);
+  }
+  .past-scroll::-webkit-scrollbar { width: 6px; }
+  .past-scroll::-webkit-scrollbar-track { background: transparent; }
+  .past-scroll::-webkit-scrollbar-thumb { background: rgba(139,58,42,0.3); border-radius: 3px; }
+  .past-item { padding: 26px 0; border-bottom: 1px solid rgba(26,21,16,0.1); display: grid; grid-template-columns: 150px 1fr; gap: 24px; }
+  .past-date { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--rust); }
+  .past-venue { font-family: 'Playfair Display', serif; font-size: 1.25rem; color: var(--ink); margin-bottom: 10px; line-height: 1.25; }
+  .past-meta { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-bottom: 12px; }
+  .past-meta span { font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-light); }
+  .past-program { font-family: 'EB Garamond', serif; font-size: 0.95rem; font-style: italic; color: var(--ink-mid); line-height: 1.6; }
 
   /* MEDIA */
   .media { padding: 90px 72px; background: var(--paper); }
@@ -110,10 +137,12 @@
     .hero-content { padding: 0 28px 52px; }
     .hero-name { font-size: clamp(3rem, 15vw, 4.5rem); }
     .bio { grid-template-columns: 1fr; }
-    .bio-image { height: 65vw; }
+    .bio-image { height: auto; aspect-ratio: 4/5; background-size: contain; background-color: var(--paper-dark); }
     .bio-text { padding: 56px 28px; }
-    .upcoming, .media, .contact { padding: 60px 28px; }
+    .performances, .media, .contact { padding: 60px 28px; }
     .upcoming-grid { grid-template-columns: 1fr; gap: 36px; }
+    .past-item { grid-template-columns: 1fr; gap: 6px; }
+    .past-scroll { max-height: 400px; }
     .perf-grid { grid-template-columns: 1fr; }
     footer { padding: 24px 28px; flex-direction: column; gap: 10px; }
   }
@@ -125,7 +154,7 @@
   <a href="#" class="nav-name">Maximus Breger</a>
   <ul class="nav-links" id="navLinks">
     <li><a href="#bio">Biography</a></li>
-    <li><a href="#upcoming">Upcoming Performances</a></li>
+    <li><a href="#performances">Performances</a></li>
     <li><a href="#media">Media</a></li>
     <li><a href="#contact">Contact</a></li>
   </ul>
@@ -155,42 +184,70 @@
   </div>
 </section>
 
-<section class="upcoming" id="upcoming">
-  <div class="upcoming-title-block reveal">
-    <span class="section-label">Upcoming Performances</span>
+<section class="performances" id="performances">
+  <div class="performances-title-block reveal">
+    <span class="section-label">Performances</span>
+    <h2 class="section-heading">Where to Hear Maximus</h2>
   </div>
-  <div class="upcoming-grid reveal">
-    <div class="upcoming-card">
-      <div class="upcoming-date">September 6, 2026</div>
-      <div class="upcoming-venue">Atria at The Arboretum</div>
-      <div class="upcoming-meta">
-        <span><strong>6:00 &ndash; 7:00 PM</strong></span>
-        <span>Solo Recital</span>
+
+  <div class="perf-tabs reveal">
+    <button class="perf-tab active" data-tab="upcoming">Upcoming</button>
+    <button class="perf-tab" data-tab="past">Past</button>
+  </div>
+
+  <div class="perf-panel active" id="panel-upcoming">
+    <div class="upcoming-grid">
+      <div class="upcoming-card">
+        <div class="upcoming-date">September 6, 2026</div>
+        <div class="upcoming-venue">Atria at The Arboretum</div>
+        <div class="upcoming-meta">
+          <span><strong>6:00 &ndash; 7:00 PM</strong></span>
+          <span>Solo Recital</span>
+          <span>Exclusive to Residents</span>
+        </div>
+        <div class="upcoming-tag">Residents Only</div>
+        <div class="upcoming-program-label">Program</div>
+        <ul class="upcoming-program">
+          <li>Bach &mdash; Prelude and Fugue, BWV 863</li>
+          <li>Beethoven &mdash; Piano Sonata No. 21, "Waldstein"</li>
+          <li>Chopin &mdash; Ballade No. 1 in G minor, Op. 23</li>
+          <li>Prokofiev &mdash; Piano Sonata No. 7, Op. 83</li>
+        </ul>
       </div>
-      <div class="upcoming-tag">Residents Only</div>
-      <div class="upcoming-program-label">Program</div>
-      <ul class="upcoming-program">
-        <li>Bach &mdash; Prelude and Fugue, BWV 863</li>
-        <li>Beethoven &mdash; Piano Sonata No. 21, "Waldstein"</li>
-        <li>Chopin &mdash; Ballade No. 1 in G minor, Op. 23</li>
-        <li>Prokofiev &mdash; Piano Sonata No. 7, Op. 83</li>
-      </ul>
+      <div class="upcoming-card">
+        <div class="upcoming-date">September 10, 2026</div>
+        <div class="upcoming-venue">Longhorn Village</div>
+        <div class="upcoming-meta">
+          <span><strong>4:00 &ndash; 5:00 PM</strong></span>
+          <span>Solo Recital</span>
+          <span>Exclusive to Residents</span>
+        </div>
+        <div class="upcoming-tag">Residents Only</div>
+        <div class="upcoming-program-label">Program</div>
+        <ul class="upcoming-program">
+          <li>Bach &mdash; Prelude and Fugue, BWV 863</li>
+          <li>Beethoven &mdash; Piano Sonata No. 21, "Waldstein"</li>
+          <li>Chopin &mdash; Ballade No. 1 in G minor, Op. 23</li>
+          <li>Prokofiev &mdash; Piano Sonata No. 7, Op. 83</li>
+        </ul>
+      </div>
     </div>
-    <div class="upcoming-card">
-      <div class="upcoming-date">September 10, 2026</div>
-      <div class="upcoming-venue">Longhorn Village</div>
-      <div class="upcoming-meta">
-        <span><strong>4:00 &ndash; 5:00 PM</strong></span>
-        <span>Solo Recital</span>
+  </div>
+
+  <div class="perf-panel" id="panel-past">
+    <div class="past-scroll">
+      <div class="past-item">
+        <div class="past-date">January 15, 2026</div>
+        <div>
+          <div class="past-venue">Weill Recital Hall at Carnegie Hall</div>
+          <div class="past-meta">
+            <span>7:00 PM</span>
+            <span>Solo Recital</span>
+            <span>American Virtuoso International Music Competition Winners Recital</span>
+          </div>
+          <div class="past-program">Prokofiev &mdash; Piano Sonata No. 7, Op. 83: I. Allegro inquieto</div>
+        </div>
       </div>
-      <div class="upcoming-tag">Residents Only</div>
-      <div class="upcoming-program-label">Program</div>
-      <ul class="upcoming-program">
-        <li>Bach &mdash; Prelude and Fugue, BWV 863</li>
-        <li>Beethoven &mdash; Piano Sonata No. 21, "Waldstein"</li>
-        <li>Chopin &mdash; Ballade No. 1 in G minor, Op. 23</li>
-        <li>Prokofiev &mdash; Piano Sonata No. 7, Op. 83</li>
-      </ul>
     </div>
   </div>
 </section>
@@ -250,6 +307,14 @@ navToggle.addEventListener('click', () => {
 navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
   navToggle.classList.remove('open');
   navLinks.classList.remove('open');
+}));
+
+const perfTabs = document.querySelectorAll('.perf-tab');
+perfTabs.forEach(tab => tab.addEventListener('click', () => {
+  perfTabs.forEach(t => t.classList.remove('active'));
+  tab.classList.add('active');
+  document.querySelectorAll('.perf-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel-' + tab.dataset.tab).classList.add('active');
 }));
 
 const obs = new IntersectionObserver(entries => {
